@@ -1,0 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400;500&display=swap');
+
+#root {
+  margin: 0 auto;
+  text-align: center;
+
+}
+
+body, html{
+  margin:0 auto;
+  width:100vw;
+  overflow-x:hidden;
+
+  scroll:smooth;
+  font-family:Jost
+
+
+}
