@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { MdArrowBackIos } from "react-icons/md";
 import PropTypes from "prop-types";
 import Loader from "../Loader";
+import { GiPadlock } from "react-icons/gi";
 
 const CheckOutForm = ({
   book_details,
@@ -222,7 +223,10 @@ const CheckOutForm = ({
             )}
           </Formik>
         )}
+
+        <div className="w-full flex items-center justify-center gap-2 mt-6 font-semibold text-sm text-black"><span className="text-2xl"><GiPadlock/></span>Powered by SoftleafApplications</div>
       </div>
+
     </MainLayout>
   );
 };
