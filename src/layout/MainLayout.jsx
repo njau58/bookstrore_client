@@ -10,7 +10,7 @@ const MainLayout = ({ children }) => {
             Get The Best Selling Book Today
           </h1>
           <p className=" text-center text-white text-lg max-w-xs  font-extralight">
-            Get book in your phone with just a click of a button.
+            Get book in your email with just a click of a button.
           </p>
         </div>
 
