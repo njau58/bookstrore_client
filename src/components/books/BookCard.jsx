@@ -2,7 +2,7 @@
 import { Link } from "react-router-dom";
 const BookCard = ({ book_id, book_title, price, book_img, excerpt }) => {
   return (
-    <div className="bg-white shadow-lg border rounded-lg py-6 px-3">
+    <div className="bg-white shadow-lg border max-w-xs rounded-lg py-6 px-3">
       <img className="object-center mx-auto h-44 w-44" src={book_img}></img>
       <div className="flex flex-col space-y-4 items-center  justify-center">
         <h1 className="font-bold mt-4 text-lg">{book_title}</h1>

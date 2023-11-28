@@ -19,7 +19,7 @@ const CheckOutForm = ({
 }) => {
   return (
     <MainLayout>
-      <div className="flex flex-col max-w-xl lg:mx-auto mx-4  px-4 pb-6 pt-2">
+      <div className="flex flex-col max-w-xl lg:mx-auto mx-4  px-4 pb-6 pt-2 mt-44">
         <div className="flex justify-start items-start  ">
           <Link
             className="px-6 py-2.5 bg-gray-100 rounded-lg  hover:bg-gray-200 "

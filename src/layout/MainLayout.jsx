@@ -4,14 +4,14 @@ import PropTypes from "prop-types";
 const MainLayout = ({ children }) => {
   return (
     <>
-      <div className=" relative w-screen  flex items-center justify-center top-0 py-24  bg-hero bg-center bg-cover bg-no-repeat  ">
-        <div className="absolute z-20  mx-4 flex flex-col items-center justify-center space-y-24">
+      <div className="  w-screen fixed  flex items-center justify-center top-0 h-44  bg-hero bg-center bg-cover bg-no-repeat  ">
+        <div className="absolute z-20 h-full w-full mx-4 flex flex-col items-center justify-center gap-3">
           <h1 className="text-white font-bold text-3xl lg:text-4xl text-center ">
             Get The Best Selling Book Today
           </h1>
-          <h2 className="absolute z-20 text-center text-white text-lg  font-extralight">
+          <p className=" text-center text-white text-lg max-w-xs  font-extralight">
             Get book in your phone with just a click of a button.
-          </h2>
+          </p>
         </div>
 
         <div className="absolute inset-0 w-full h-full z-10 bg-black bg-opacity-70"></div>
