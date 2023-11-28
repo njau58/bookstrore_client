@@ -4,20 +4,62 @@ import * as Yup from "yup";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import book_store from "../books";
-import { useState, useEffect } from "react";
+import { useReducer, useEffect } from "react";
 
 import CheckOutForm from "../CheckOutForm";
 
 const CheckOut = () => {
   const { bookId } = useParams();
-  const [book_details, setBookDetails] = useState([]);
-  const [error, setError] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
 
-  const [errorMessage, setErrorMessage] = useState("");
-
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  const primaryReducer = (state, action) => {
+    switch (action.type) {
+      case "SET_BOOK_DETAILS": {
+        return {
+          ...state,
+          book_details: action.payload,
+        };
+      }
+
+      case "SET_ERROR": {
+        return {
+          ...state,
+          error: action.payload,
+        };
+      }
+      case "SET_LOADING": {
+        return {
+          ...state,
+          loading: action.payload,
+        };
+      }
+      case "SET_ERROR_MESSAGE": {
+        return {
+          ...state,
+          errorMessage: action.payload,
+        };
+      }
+      case "SET_SUCCESS": {
+        return {
+          ...state,
+          success: action.payload,
+        };
+      }
+      default:
+        return state;
+    }
+  };
+
+  const initialState = {
+    error: false,
+    success: false,
+    loading: false,
+    book_details: [],
+    errorMessage: "",
+  };
+
+  const [state, dispatch] = useReducer(primaryReducer, initialState);
 
   useEffect(() => {
     const book_info = book_store?.filter((book) => book.book_id === bookId);
@@ -25,56 +67,88 @@ const CheckOut = () => {
     if (book_info?.length < 1) {
       navigate("/");
     }
-    setBookDetails(book_info);
+
+    dispatch({ type: "SET_BOOK_DETAILS", payload: book_info });
   }, [bookId, navigate]);
+
+
+
+
+  const setError = () =>{
+    dispatch({ type: "SET_ERROR", payload: false });
+
+  }
+  const setSuccess = () =>{
+    dispatch({ type: "SET_SUCCESS", payload: false });
+
+  }
 
   const stkQuery = async (payload, CheckoutRequestID) => {
     let reqeustCount = 0;
-    const timer = setInterval(async() => {
+    const timer = setInterval(async () => {
       reqeustCount += 1;
       if (reqeustCount === 15) {
         clearInterval(timer);
-        setErrorMessage("You took too long to pay");
-        setLoading(false);
+        dispatch({
+          type: "SET_ERROR_MESSAGE",
+          payload: "You took too long to pay",
+        });
+        dispatch({ type: "SET_LOADING", payload: "false" });
       }
 
-    await  axios
-        .post(`https://bookstore-server-two.vercel.app/api/query/${CheckoutRequestID}`)
+      await axios
+        .post(
+          `https://bookstore-server-two.vercel.app/api/query/${CheckoutRequestID}`
+        )
         .then(async (response) => {
           if (response.data.ResultCode === "0") {
             //make api
             clearInterval(timer);
 
             await axios
-              .post("https://bookstore-server-two.vercel.app/api/sendMedia", payload)
+              .post(
+                "https://bookstore-server-two.vercel.app/api/sendMedia",
+                payload
+              )
               .then((res) => {
                 if (res) {
                   clearInterval(timer);
-                  setLoading(false);
-                  setError(false);
-                  setSuccessMessage(
-                    `Successful. We've sent book to your email.`
-                  );
+                  dispatch({ type: "SET_LOADING", payload: false });
+                  dispatch({ type: "SET_ERROR", payload: false });
+                  dispatch({
+                    type: "SET_SUCCESS",
+                    payload: true
+                  });
+
                   return;
                 }
               })
               .catch((error) => {
-                setError(true);
-                setErrorMessage(error.message);
-                setLoading(false);
+                dispatch({ type: "SET_ERROR", payload: true });
+                dispatch({ type: "SET_ERROR_MESSAGE", payload: error.message });
+                dispatch({ type: "SET_LOADING", payload: false });
+
                 clearInterval(timer);
               });
 
             return;
           } else if (response.errorCode === "500.001.1001") {
-            setError(true);
-            setErrorMessage(response.errorMessage);
-            setLoading(false);
+            dispatch({ type: "SET_ERROR", payload: true });
+            dispatch({
+              type: "SET_ERROR_MESSAGE",
+              payload: response.errorMessage,
+            });
+            dispatch({ type: "SET_LOADING", payload: false });
+
             clearInterval(timer);
           } else {
-            setError(true);
-            setErrorMessage(response.data.ResultDesc);
-            setLoading(false);
+            dispatch({ type: "SET_ERROR", payload: true });
+            dispatch({
+              type: "SET_ERROR_MESSAGE",
+              payload: response.data.ResultDesc,
+            });
+            dispatch({ type: "SET_LOADING", payload: false });
+
             clearInterval(timer);
           }
         })
@@ -85,19 +159,19 @@ const CheckOut = () => {
   };
 
   const sendMessage = async (payload) => {
-    setLoading(true);
-   await axios
+    dispatch({ type: "SET_LOADING", payload: true });
+    await axios
       .post("https://bookstore-server-two.vercel.app/api/push", payload)
       .then(({ data }) => {
-
-        console.log(data)
+        console.log(data);
         stkQuery(payload, data.CheckoutRequestID);
       })
       .catch((error) => {
-        // console.log('THIS IS', error)
-        setError(true);
-        setErrorMessage(error.message);
-        setLoading(false);
+        console.log("THIS IS", error);
+
+        dispatch({ type: "SET_ERROR", payload: true });
+        dispatch({ type: "SET_ERROR_MESSAGE", payload: error.message });
+        dispatch({ type: "SET_LOADING", payload: false });
       });
   };
 
@@ -115,18 +189,20 @@ const CheckOut = () => {
   });
 
   return (
-    <CheckOutForm
-      sendMessage={sendMessage}
-      validationSchema={validationSchema}
-      book_details={book_details}
-      bookId={bookId}
-      loading={loading}
-      error={error}
-      errorMessage={errorMessage}
-      successMessage={successMessage}
-      setError={setError}
-      setSuccessMessage={setSuccessMessage}
-    />
+    <>
+      <CheckOutForm
+        sendMessage={sendMessage}
+        validationSchema={validationSchema}
+        book_details={state.book_details}
+        bookId={bookId}
+        loading={state.loading}
+        error={state.error}
+        errorMessage={state.errorMessage}
+        success={state.success}
+        toggleError={setError}
+        toggleSuccess={setSuccess}
+      />
+    </>
   );
 };
 

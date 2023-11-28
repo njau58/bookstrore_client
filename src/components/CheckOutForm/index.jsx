@@ -13,10 +13,10 @@ const CheckOutForm = ({
   validationSchema,
   loading,
   error,
-  setError,
+  success,
   errorMessage,
-  successMessage,
-  setSuccessMessage,
+  toggleSuccess, 
+  toggleError,
 }) => {
   return (
     <MainLayout>
@@ -59,7 +59,7 @@ const CheckOutForm = ({
                 <span className="sr-only">Info</span>
                 <div className="ml-3 text-sm font-medium text-center">{errorMessage}</div>
                 <button
-                  onClick={() => setError(false)}
+                  onClick={() => toggleError()}
                   type="button"
                   className="ml-4 -mx-1.5 -my-1.5 bg-red-50 text-red-500 rounded-lg focus:ring-2 focus:ring-red-400 p-1.5 hover:bg-red-200 inline-flex items-center justify-center h-5 w-5 "
                   data-dismiss-target="#alert-2"
@@ -84,7 +84,7 @@ const CheckOutForm = ({
               </div>
             )}
 
-            {successMessage && (
+            {success && (
               <div
                 id="alert-2"
                 className="flex items-center justify-between p-4 mb-4  text-green-800 rounded-lg bg-green-50 "
@@ -105,7 +105,7 @@ const CheckOutForm = ({
                 </div>
 
                 <button
-                  onClick={() => setSuccessMessage(false)}
+                  onClick={() => toggleSuccess()}
                   type="button"
                   className="ml-4 -mx-1.5 -my-1.5 bg-green-50 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 inline-flex items-center justify-center h-5 w-5"
                   data-dismiss-target="#alert-2"
@@ -241,7 +241,9 @@ CheckOutForm.propTypes = {
   errorMessage: PropTypes.string,
   setError: PropTypes.func,
   setSuccessMessage: PropTypes.func,
-  successMessage: PropTypes.boolean,
+  success: PropTypes.boolean,
+  toggleSuccess:PropTypes.func,
+  toggleError:PropTypes.func
 };
 
 export default CheckOutForm;
