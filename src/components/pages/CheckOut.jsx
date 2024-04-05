@@ -71,17 +71,12 @@ const CheckOut = () => {
     dispatch({ type: "SET_BOOK_DETAILS", payload: book_info });
   }, [bookId, navigate]);
 
-
-
-
-  const setError = () =>{
+  const setError = () => {
     dispatch({ type: "SET_ERROR", payload: false });
-
-  }
-  const setSuccess = () =>{
+  };
+  const setSuccess = () => {
     dispatch({ type: "SET_SUCCESS", payload: false });
-
-  }
+  };
 
   const stkQuery = async (payload, CheckoutRequestID) => {
     let reqeustCount = 0;
@@ -117,7 +112,7 @@ const CheckOut = () => {
                   dispatch({ type: "SET_ERROR", payload: false });
                   dispatch({
                     type: "SET_SUCCESS",
-                    payload: true
+                    payload: true,
                   });
 
                   return;
@@ -155,7 +150,7 @@ const CheckOut = () => {
         .catch((error) => {
           console.log(error);
         });
-    }, 2000);
+    }, 1000);
   };
 
   const sendMessage = async (payload) => {
